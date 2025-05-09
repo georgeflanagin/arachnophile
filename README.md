@@ -67,6 +67,26 @@ correctly from a read-only share.
 - There is only one network that is plugged in, although each compute node has four NICs.
 - In the network config, set the IP address to `10.0.0.NN`, netmask to `255.255.255.0`, and the gateway to be arachne's IP address, `10.0.0.254`
 - Enable it for use by any user and to start on boot. 
-- Click the "begin install" button. **NOTE:** The installation does not take very long.
+- Click the "begin install" button. **NOTE:** The installation does not take very long compared to installs of a GUI-based Linux.
 
-### 
+### After booting into Rocky 9.5
+
+- It boots into text mode. Verify you can login with the password.
+- Ensure you are seeing the outside world: 
+    - `ping 10.0.0.254` should ping Arachne.
+    - `ping 8.8.4.4` should work.
+- Login to Arachne as root. 
+    - `ssh-copy-id root@nodeNN`
+    - Now login to the node from Arachne
+- Remove the directories that we need for mounts. (They should be empty.)
+    - `rmdir /opt`
+    - `rmdir /home`
+- Edit `/etc/fstab`
+    - Delete the line that references `/home`
+    - Add two lines to reference `/home` and `/opt` as mounts on Arachne.
+```bash
+10.0.0.254:/home /home nfs defaults,_netdev 0 0
+10.0.0.254:/opt  /opt nfs ro,_netdev 0 0
+```
+
+
