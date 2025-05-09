@@ -75,6 +75,8 @@ correctly from a read-only share.
 - Ensure you are seeing the outside world: 
     - `ping 10.0.0.254` should ping Arachne.
     - `ping 8.8.4.4` should work.
+    - `dnf install epel-release` should work.
+    - `dnf install cowsay` should work.
 - Login to Arachne as root. 
     - `ssh-copy-id root@nodeNN`
     - Now login to the node from Arachne
@@ -104,4 +106,17 @@ correctly from a read-only share.
 - Mount the shared disks from Arachne.
     - `mount -av` (the -v is verbose so that errors will be detailed instead of only reported.)
     - `ls -l /home` (Should show users' `$HOME`s from Arachne.)
+
+- Create a link to our research software 
+    - `cd /usr/local`
+    - `ln -s /opt/sw/pub/apps sw`
+    - `cd sw` and `ls -l` to verify.
+- Enable the NVIDIA repo (if the node has GPUs)
+    - `sudo curl -o /etc/yum.repos.d/cuda-rhel9.repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo`
+    - verify it got done: `dnf repolist`
+- Install one or more CUDA libraries
+    - `dnf install cuda` (whatever is most recent and still compatible with the OS)
+    - `dnf install cuda-12-1` As an example.
+    - These will be installed into canonical paths on `/usr/local`.
+
 
