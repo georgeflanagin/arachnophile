@@ -81,6 +81,9 @@ correctly from a read-only share.
 - Remove the directories that we need for mounts. (They should be empty.)
     - `rmdir /opt`
     - `rmdir /home`
+- Prevent accidental updates to critical packages.
+    - add this line to `/etc/dnf/dnf.conf`:
+        - `exclude=kernel* kmod-kvdo* zfs*`
 - Edit `/etc/fstab`
     - Delete the line that references `/home`
     - Add two lines to reference `/home` and `/opt` as mounts on Arachne.
@@ -88,5 +91,17 @@ correctly from a read-only share.
 10.0.0.254:/home /home nfs defaults,_netdev 0 0
 10.0.0.254:/opt  /opt nfs ro,_netdev 0 0
 ```
-
+- Add these lines to `/etc/hosts` so that the nodes "know about" each other
+```
+10.0.0.254  arachne
+10.0.0.1    node01
+10.0.0.2    node02
+10.0.0.3    node03
+10.0.0.51   node51
+10.0.0.52   node52
+10.0.0.53   node53
+```
+- Mount the shared disks from Arachne.
+    - `mount -av` (the -v is verbose so that errors will be detailed instead of only reported.)
+    - `ls -l /home` (Should show users' `$HOME`s from Arachne.)
 
