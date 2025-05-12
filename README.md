@@ -118,18 +118,25 @@ correctly from a read-only share.
     - `dnf install cuda` (whatever is most recent and still compatible with the OS)
     - `dnf install cuda-12-1` As an example.
     - These will be installed into canonical paths on `/usr/local`.
+
 - Install SLURM
     - `dnf install slurm slurm-slurmd slurm-slurmctld slurm-perlapi slurm-torque munge`  ( **NOTE** the version of slurm must be the same throughout the cluster.)
     - Create the munge key on Arachne (This is already done, but it seems like a good idea to document it here.) 
 ```bash
-dd if=/dev/urandom bs=1 count=1024 > /etc/munge/munge.key
-chown munge:munge /etc/munge/munge.key
-chmod 400 /etc/munge/munge.key
+    dd if=/dev/urandom bs=1 count=1024 > /etc/munge/munge.key
+    chown munge:munge /etc/munge/munge.key
+    chmod 400 /etc/munge/munge.key
 ```
     - From Arachne, copy the munge key to the node.
 ```bash
-scp /etc/munge/munge.key root@nodeNN:/etc/munge/
-ssh root@nodeNN "chown munge:munge /etc/munge/munge.key && chmod 400 /etc/munge/munge.key"
+    scp /etc/munge/munge.key root@nodeNN:/etc/munge/
+    ssh root@nodeNN "chown munge:munge /etc/munge/munge.key && chmod 400 /etc/munge/munge.key"
 ```
     - Get munge running: `systemctl enable --now munge`
-
+    - Create directories for SLURM's bookkeeping on the node. SLURM is very picky about owners and permissions.
+        - `mkdir -p /var/spool/slurmd /var/log/slurm`
+        - `chown slurm:slurm /var/spool/slurmd /var/log/slurm`
+    - Copy the slurm config files from Arachne to the node.
+        - `scp /etc/slurm/slurm.conf nodeNN:/etc/slurm`
+        - `scp /etc/slurm/prolog.sh nodeNN:/etc/slurm`
+        - `scp /etc/slurm/slurm.epilog.clean nodeNN:/etc/slurm`
