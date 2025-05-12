@@ -118,5 +118,18 @@ correctly from a read-only share.
     - `dnf install cuda` (whatever is most recent and still compatible with the OS)
     - `dnf install cuda-12-1` As an example.
     - These will be installed into canonical paths on `/usr/local`.
-
+- Install SLURM
+    - `dnf install slurm slurm-slurmd slurm-slurmctld slurm-perlapi slurm-torque munge`  ( **NOTE** the version of slurm must be the same throughout the cluster.)
+    - Create the munge key on Arachne (This is already done, but it seems like a good idea to document it here.) 
+```bash
+dd if=/dev/urandom bs=1 count=1024 > /etc/munge/munge.key
+chown munge:munge /etc/munge/munge.key
+chmod 400 /etc/munge/munge.key
+```
+    - From Arachne, copy the munge key to the node.
+```bash
+scp /etc/munge/munge.key root@nodeNN:/etc/munge/
+ssh root@nodeNN "chown munge:munge /etc/munge/munge.key && chmod 400 /etc/munge/munge.key"
+```
+    - Get munge running: `systemctl enable --now munge`
 
