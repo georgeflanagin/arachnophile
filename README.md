@@ -45,7 +45,7 @@ correctly from a read-only share.
 
 ### Hardware attachment
 
-- Use the tiny monitor. The VGA plug is on the backplane, near the center. There is only one video connection. 
+- Use the tiny monitor. The VGA plug is on the backplane of the CPU nodes and front panel of the GPU nodes, near the center. There is only one video connection. 
 - Use the black keyboard and mouse that share a dongle. The mouse is not strictly necessary. The USB plugs are on the backplane near the VGA plug.
 
 ### Before the install.
@@ -72,7 +72,16 @@ correctly from a read-only share.
 ### After booting into Rocky 9.5
 
 - It boots into text mode. Verify you can login with the password.
-- Ensure you are seeing the outside world: 
+- Edit `/etc/resolv.conf`
+```bash
+nameserver 8.8.8.8
+nameserver 10.0.0.254
+```
+- Disable SELinux
+    - `setenforce 0`
+    - Edit `/etc/selinux/config`
+        - Change the SELINUX line to say `SELINUX=disabled`.
+- Now ensure you are seeing the outside world: 
     - `ping 10.0.0.254` should ping Arachne.
     - `ping 8.8.4.4` should work.
     - `dnf install epel-release` should work.
@@ -80,9 +89,12 @@ correctly from a read-only share.
 - Login to Arachne as root. 
     - `ssh-copy-id root@nodeNN`
     - Now login to the node from Arachne
-- Remove the directories that we need for mounts. (They should be empty.)
+- Remove the directories that we need for mounts. (They should be empty... If they are not, proceed with `rm -fr`.)
     - `rmdir /opt`
+    - `mkdir /opt`
+    - `umount /home`
     - `rmdir /home`
+    - `mkdir /home`
 - Prevent accidental updates to critical packages.
     - add this line to `/etc/dnf/dnf.conf`:
         - `exclude=kernel* kmod-kvdo* zfs*`
@@ -93,6 +105,9 @@ correctly from a read-only share.
 10.0.0.254:/home /home nfs defaults,_netdev 0 0
 10.0.0.254:/opt  /opt nfs ro,_netdev 0 0
 ```
+- Mount the shared disks from Arachne.
+    - `mount -av` (the -v is verbose so that errors will be detailed instead of only reported.)
+    - `ls -l /home` (Should show users' `$HOME`s from Arachne.)
 - Add these lines to `/etc/hosts` so that the nodes "know about" each other
 ```
 10.0.0.254  arachne
@@ -103,11 +118,7 @@ correctly from a read-only share.
 10.0.0.52   node52
 10.0.0.53   node53
 ```
-- Mount the shared disks from Arachne.
-    - `mount -av` (the -v is verbose so that errors will be detailed instead of only reported.)
-    - `ls -l /home` (Should show users' `$HOME`s from Arachne.)
-
-- Create a link to our research software 
+- Create a link to our research software (Note that this step is a convenience so that Arachne resembles the other cluster computers at UR.) 
     - `cd /usr/local`
     - `ln -s /opt/sw/pub/apps sw`
     - `cd sw` and `ls -l` to verify.
