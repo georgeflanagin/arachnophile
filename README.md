@@ -73,14 +73,14 @@ correctly from a read-only share.
 ### After booting into Rocky 9.5
 
 - It boots into text mode. Verify you can login with the password.
-- Do a `dnf update` FIRST.
+- Now ensure you are seeing the outside world: 
+    - `ping 10.0.0.254` should ping Arachne.
+    - `ping 8.8.4.4` should work.
 - Disable SELinux
     - `setenforce 0`
     - Edit `/etc/selinux/config`
         - Change the SELINUX line to say `SELINUX=disabled`.
-- Now ensure you are seeing the outside world: 
-    - `ping 10.0.0.254` should ping Arachne.
-    - `ping 8.8.4.4` should work.
+- Do a `dnf update` FIRST, and then ....
     - `dnf install epel-release` should work.
     - `dnf install cowsay` should work.
 - Login to Arachne as root. 
