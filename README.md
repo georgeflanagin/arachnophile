@@ -66,17 +66,14 @@ correctly from a read-only share.
 - Set the hostname as `nodeNN`, where NN is the node number.
 - There is only one network that is plugged in, although each compute node has four NICs.
 - In the network config, set the IP address to `10.0.0.NN`, netmask to `255.255.255.0`, and the gateway to be arachne's IP address, `10.0.0.254`
+- Choose 8.8.8.8 for DNS
 - Enable it for use by any user and to start on boot. 
 - Click the "begin install" button. **NOTE:** The installation does not take very long compared to installs of a GUI-based Linux.
 
 ### After booting into Rocky 9.5
 
 - It boots into text mode. Verify you can login with the password.
-- Edit `/etc/resolv.conf`
-```bash
-nameserver 8.8.8.8
-nameserver 10.0.0.254
-```
+- Do a `dnf update` FIRST.
 - Disable SELinux
     - `setenforce 0`
     - Edit `/etc/selinux/config`
