@@ -86,25 +86,28 @@ correctly from a read-only share.
 - Login to Arachne as root. 
     - `ssh-copy-id root@nodeNN`
     - Now login to the node from Arachne
-- Remove the directories that we need for mounts. (They should be empty... If they are not, proceed with `rm -fr`.)
+- Remove the directories that we need for mounts, and add /scratch. (They should be empty... If they are not, proceed with `rm -fr`.)
     - `rmdir /opt`
     - `mkdir /opt`
     - `umount /home`
     - `rmdir /home`
     - `mkdir /home`
+    - `mkdir /scratch`
 - Prevent accidental updates to critical packages.
     - add this line to `/etc/dnf/dnf.conf`:
         - `exclude=kernel* kmod-kvdo* zfs*`
 - Edit `/etc/fstab`
-    - Delete the line that references `/home`
+    - Edit the line that references `/home`. It probably looks like this:
+        - `/dev/mapper/rl_node03-home /home                   xfs     defaults        0 0`
+    - Change `/home` to `/scratch`
     - Add two lines to reference `/home` and `/opt` as mounts on Arachne.
 ```bash
 10.0.0.254:/home /home nfs defaults,_netdev 0 0
 10.0.0.254:/opt  /opt nfs ro,_netdev 0 0
 ```
-- Mount the shared disks from Arachne.
-    - `mount -av` (the -v is verbose so that errors will be detailed instead of only reported.)
-    - `ls -l /home` (Should show users' `$HOME`s from Arachne.)
+    - Mount the shared disks from Arachne.
+        - `mount -av` (the -v is verbose so that errors will be detailed instead of only reported.)
+        - `ls -l /home` (Should show users' `$HOME`s from Arachne.)
 - Add these lines to `/etc/hosts` so that the nodes "know about" each other
 ```
 10.0.0.254  arachne
