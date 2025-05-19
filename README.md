@@ -132,7 +132,7 @@ correctly from a read-only share.
 
 - Install SLURM
     - You may need a slurm user: `useradd -r -m -s /bin/false slurm`    
-    - `dnf install slurm slurm-slurmd slurm-slurmctld slurm-perlapi slurm-torque munge`  ( **NOTE** the version of slurm must be the same throughout the cluster.)
+    - `dnf install slurm slurm-slurmd slurm-perlapi slurm-torque munge`  ( **NOTE** the version of slurm must be the same throughout the cluster.)
     - In the newly created `/etc/slurm/slurm.conf` file, change the SlurmUser to slurm.
     - Create the munge key on Arachne (This is already done, but it seems like a good idea to document it here.) 
 ```bash
