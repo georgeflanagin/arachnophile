@@ -83,7 +83,10 @@ correctly from a read-only share.
 - Do a `dnf update` FIRST, and then ....
     - `dnf install epel-release` should work.
     - `dnf install cowsay` should work.
-- Login to Arachne as root. 
+- Login to Arachne as `root`. 
+    - `ssh-copy-id root@nodeNN`
+    - Now login to the node from Arachne
+- Login to Arachne as `zeus`.
     - `ssh-copy-id root@nodeNN`
     - Now login to the node from Arachne
 - Remove the directories that we need for mounts, and add /scratch. (They should be empty... If they are not, proceed with `rm -fr`.)
