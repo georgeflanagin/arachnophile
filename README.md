@@ -7,7 +7,9 @@
 
 ### Enable NAT
 
-This allows the compute nodes to reach the Internet. 
+This allows the compute nodes to reach the Internet. This is a convienience in 
+our environment that allows us to pull packages to a node for testing and evaluation
+without having to bring them first to Arachne, and then push to the node.
 
 `sudo sysctl -w net.ipv4.ip_forward=1`
 
@@ -38,8 +40,10 @@ correctly from a read-only share.
 
 ```bash
 /home 10.0.0.0/24(rw,sync,no_root_squash,no_subtree_check,fsid=0)
-/opt 10.0.0.0/24(ro,sync,no_root_squash,no_subtree_check,fsid=1)
+/opt 10.0.0.0/24(ro,sync,crossmnt,no_root_squash,no_subtree_check,fsid=1)
 ```
+
+Re-export them: `exportfs -ra`.
 
 ## Configuring a compute node.
 
